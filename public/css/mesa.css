@@ -1,0 +1,106 @@
+@charset "UTF-8";
+/* RollNacional — só a mesa digital (carregado depois do tema.css) */
+
+.mesa { height: 100vh; min-height: 640px; background: var(--lateral); display: flex; flex-direction: column; overflow: hidden; }
+
+.mesa__topo {
+  height: 52px; flex: 0 0 52px; background: var(--fundo); border-bottom: 1px solid var(--borda);
+  display: flex; align-items: center; gap: 14px; padding: 0 16px;
+}
+.mesa__topo h1 { font-size: 16px; font-weight: 700; }
+.mesa__voltar { width: 36px; height: 36px; border-radius: var(--raio); border: 1px solid var(--borda); color: var(--texto-fraco); display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.presentes { display: flex; align-items: center; }
+.presentes .avatar { width: 28px; height: 28px; font-size: 11px; border: 2px solid var(--fundo); margin-left: -8px; }
+.presentes .avatar:first-child { margin-left: 0; }
+.avatar--mestre { background: var(--ambar); color: var(--fundo); }
+.avatar--ausente { background: var(--borda); color: var(--texto-fraco); }
+
+.mesa__corpo { flex: 1 1 auto; min-height: 0; display: flex; }
+@media (max-width: 900px) { .mesa { height: auto; overflow: visible; } .mesa__corpo { flex-wrap: wrap; } .biblioteca, .conversa { width: 100%; flex-basis: 100%; max-height: 50vh; } }
+
+/* ---------- Biblioteca ---------- */
+.biblioteca { width: 272px; flex: 0 0 272px; background: var(--fundo); border-right: 1px solid var(--borda); display: flex; flex-direction: column; min-height: 0; }
+.biblioteca__topo, .conversa__topo { padding: 12px 14px; border-bottom: 1px solid var(--borda); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.biblioteca__topo strong, .conversa__topo strong { font-family: var(--fonte-titulo); font-size: 14px; color: #fff; }
+.biblioteca__lista { flex: 1 1 auto; overflow-y: auto; padding: 8px; font-size: 13px; }
+.biblioteca__rodape { padding: 10px 14px; border-top: 1px solid var(--borda); font-size: 11px; color: var(--texto-apagado); display: flex; align-items: center; gap: 6px; }
+.botao--ferramenta { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--borda); background: transparent; color: var(--texto-fraco); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.botao--ferramenta:hover { color: #fff; border-color: var(--borda-forte); }
+
+.arvore details { margin-bottom: 2px; }
+.arvore summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; color: var(--texto); font-weight: 600; }
+.arvore summary::-webkit-details-marker { display: none; }
+.arvore summary:hover { background: var(--painel); }
+.arvore__filhos { padding-left: 20px; display: flex; flex-direction: column; }
+.arvore__item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; color: var(--texto-medio); text-decoration: none; }
+.arvore__item:hover { background: var(--painel); color: #fff; }
+.arvore__item.ativo { background: var(--painel-alto); color: #fff; }
+.arvore__fim { margin-left: auto; font-size: 10px; color: var(--texto-apagado); font-family: var(--fonte-mono); display: inline-flex; align-items: center; gap: 4px; }
+.arvore__fim--ambar { color: var(--ambar); }
+.ponto { width: 10px; height: 10px; border-radius: 50%; background: var(--primario); flex: 0 0 auto; }
+.ponto--npc { border-radius: 0; background: #e05a7a; }
+
+/* ---------- Tabuleiro ---------- */
+.tabuleiro { flex: 1 1 auto; min-width: 0; position: relative; background: #0a0812; display: flex; flex-direction: column; }
+.ferramentas {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 2;
+  display: flex; gap: 4px; padding: 4px; background: var(--fundo); border: 1px solid var(--borda); border-radius: 10px;
+}
+.ferramentas button { width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: var(--texto-fraco); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.ferramentas button:hover { color: #fff; }
+.ferramentas button[aria-pressed="true"] { background: var(--primario); color: #fff; }
+
+.mapa {
+  flex: 1 1 auto; position: relative; overflow: auto;
+  background-color: #16122a;
+  background-image: linear-gradient(var(--borda) 1px, transparent 1px), linear-gradient(90deg, var(--borda) 1px, transparent 1px);
+  background-size: var(--celula, 56px) var(--celula, 56px);
+  background-position: var(--desloc-x, 0px) var(--desloc-y, 0px);
+}
+.mapa__imagem { position: absolute; left: 0; top: 0; max-width: none; }
+.mapa__vazio { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--texto-fraco); text-align: center; padding: 24px; }
+
+.token {
+  position: absolute; width: var(--celula, 56px); height: var(--celula, 56px); padding: 0;
+  border-radius: 50%; border: 3px solid var(--primario); background: #2b2347; color: #fff;
+  font-family: var(--fonte-titulo); font-weight: 700; font-size: 16px; cursor: grab; overflow: hidden;
+}
+.token img { width: 100%; height: 100%; object-fit: cover; }
+.token--npc { border-radius: 8px; border-color: #e05a7a; background: #3a1f2a; font-size: 14px; }
+.token--oculto { border-style: dashed; opacity: 0.6; color: var(--rosa); }
+.token--selecionado { box-shadow: 0 0 0 3px var(--ambar); }
+.token__vida { position: absolute; height: 4px; border-radius: 2px; background: var(--fundo); width: var(--celula, 56px); }
+.token__vida > span { display: block; height: 100%; border-radius: 2px; background: var(--verde); }
+
+.nevoa { position: absolute; right: 0; top: 0; width: 34%; height: 100%; background: #0a0812; opacity: 0.85; border-left: 2px dashed #4a3f6b; pointer-events: none; }
+.mapa__legenda { position: absolute; right: 16px; bottom: 16px; font-size: 11px; color: var(--texto-apagado); font-family: var(--fonte-mono); background: var(--fundo); border: 1px solid var(--borda); border-radius: 6px; padding: 4px 8px; }
+
+.tabuleiro__rodape { height: 36px; flex: 0 0 36px; background: var(--fundo); border-top: 1px solid var(--borda); display: flex; align-items: center; gap: 16px; padding: 0 14px; font-size: 12px; color: var(--texto-apagado); font-family: var(--fonte-mono); }
+.tabuleiro__rodape .direita { margin-left: auto; color: var(--texto-medio); }
+
+/* ---------- Conversa ---------- */
+.conversa { width: 336px; flex: 0 0 336px; background: var(--fundo); border-left: 1px solid var(--borda); display: flex; flex-direction: column; min-height: 0; }
+.conversa__topo { justify-content: flex-start; }
+.ao-vivo { width: 8px; height: 8px; border-radius: 50%; background: var(--verde); }
+.conversa__lista { flex: 1 1 auto; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; font-size: 13px; }
+.fala { display: flex; flex-direction: column; gap: 3px; }
+.fala__quem { display: flex; gap: 6px; align-items: baseline; }
+.fala__quem strong { color: var(--primario-claro); }
+.fala__quem strong.mestre { color: var(--ambar); }
+.fala__quem span { font-size: 11px; color: var(--texto-apagado); }
+.fala p { margin: 0; color: var(--texto); line-height: 1.45; }
+.rolagem { background: var(--painel); border: 1px solid var(--borda); border-left: 3px solid var(--ambar); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.rolagem--jogador { border-left-color: var(--verde); }
+.rolagem--secreta { border: 1px dashed #4a3f6b; opacity: 0.85; }
+.rolagem__total { display: flex; align-items: baseline; gap: 10px; }
+.rolagem__total strong { font-family: var(--fonte-mono); font-size: 26px; color: #fff; }
+.rolagem__total span { font-family: var(--fonte-mono); font-size: 12px; color: var(--texto-fraco); }
+.rolagem__total span b { color: #fff; font-weight: 500; }
+
+.conversa__form { padding: 12px 14px; border-top: 1px solid var(--borda); display: flex; flex-direction: column; gap: 8px; }
+.conversa__opcoes { display: flex; gap: 6px; align-items: center; }
+.conversa__opcoes label { font-size: 11px; color: var(--texto-apagado); }
+.conversa__opcoes .marcar { margin-left: auto; font-size: 12px; color: var(--texto-fraco); }
+.conversa__envio { display: flex; gap: 8px; }
+.conversa__envio .entrada { height: 44px; }
+.conversa__envio button { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 8px; border: 0; background: var(--primario); color: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }

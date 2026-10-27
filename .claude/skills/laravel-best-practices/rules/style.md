@@ -7,7 +7,7 @@ Prefer Laravel's conventions in new code, but preserve an established project co
 | Element | Convention | Example |
 | --- | --- | --- |
 | Controller | Singular resource name | `ArticleController` |
-| Model | Singular StudlyCase | `User` |
+| Model | Singular StudlyCase | `Usuario` |
 | Table | Plural snake_case | `article_comments` |
 | Pivot table | Singular model names in alphabetical order, in snake_case | `article_user` |
 | Column | snake_case | `meta_title` |
