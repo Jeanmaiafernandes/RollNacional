@@ -15,19 +15,8 @@ class AtualizarSenhaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'senha_atual' => ['required', 'string', 'current_password'],
-            'senha'       => ['required', 'string', Password::min(8)->max(255), 'confirmed'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'senha_atual.required'         => 'Informe a senha atual.',
-            'senha_atual.current_password' => 'A senha atual não confere.',
-            'senha.required'               => 'Informe a nova senha.',
-            'senha.min'                    => 'A senha precisa ter pelo menos 8 caracteres.',
-            'senha.confirmed'              => 'A confirmação de senha não confere.',
+            'senha_atual' => ['required', 'current_password'],
+            'senha' => ['required', 'confirmed', Password::defaults()],
         ];
     }
 }

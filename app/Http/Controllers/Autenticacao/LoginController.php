@@ -12,7 +12,7 @@ class LoginController extends Controller
 {
     public function formulario(): View
     {
-        return view('autenticacao.login');
+        return view('autenticacao.entrar');
     }
 
     public function entrar(LoginRequest $request): RedirectResponse

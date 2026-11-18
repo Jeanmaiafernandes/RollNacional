@@ -11,9 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn () => route('autenticacao.login'));
-        $middleware->redirectUsersTo(fn () => route('inicio'));
+        ->withMiddleware(function (Middleware $middleware): void {
+            $middleware->redirectGuestsTo(fn () => route('entrar'));
+            $middleware->redirectUsersTo(fn () => route('inicio'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

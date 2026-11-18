@@ -1,14 +1,14 @@
 <?php
 
-use App\Http\Controllers\Campanha\CampanhaController;
+use App\Http\Controllers\PainelController;
 use Illuminate\Support\Facades\Route;
 
-require __DIR__ . '/autenticacao.php';
+require __DIR__.'/autenticacao.php';
 
 Route::middleware(['auth', 'auth.session'])->group(function () {
-    Route::get('/', [CampanhaController::class, 'listar'])->name('inicio');
+    Route::get('/', PainelController::class)->name('inicio');
 
-    foreach (glob(__DIR__ . '/web/*.php') as $arquivo) {
+    foreach (glob(__DIR__.'/web/*.php') as $arquivo) {
         require $arquivo;
     }
 });

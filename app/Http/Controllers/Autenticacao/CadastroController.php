@@ -13,7 +13,7 @@ class CadastroController extends Controller
 {
     public function formulario(): View
     {
-        return view('autenticacao.cadastro');
+        return view('autenticacao.cadastrar');
     }
 
     public function cadastrar(CadastroRequest $request): RedirectResponse

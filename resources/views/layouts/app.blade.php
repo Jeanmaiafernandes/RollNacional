@@ -1,23 +1,19 @@
-<!doctype html>
+@props(['titulo' => null, 'menu' => 'nenhum'])
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('titulo', 'RollNacional') · RollNacional</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/tema.css">
-    @stack('estilos')
+    @include('layouts.partials.head', ['titulo' => $titulo])
 </head>
-<body>
-<div class="app">
-    @include('parciais.lateral')
+<body class="min-h-screen">
+    <a href="#conteudo" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-superficie focus:px-4 focus:py-2">Pular para o conteúdo</a>
 
-    <main class="conteudo">
-        @include('parciais.avisos')
-        @yield('conteudo')
+    @include('layouts.partials.cabecalho')
+
+    <main id="conteudo" {{ $attributes->class('mx-auto box-border flex max-w-7xl flex-col gap-7 px-6 pb-20 pt-9') }}>
+        <x-avisos />
+
+        {{ $slot }}
     </main>
-</div>
-@stack('scripts')
 </body>
 </html>

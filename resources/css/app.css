@@ -1,0 +1,128 @@
+/*
+ * RollNacional — folha de estilos de entrada do Tailwind.
+ *
+ * Compilada pelo Tailwind Standalone CLI (sem Node nem Vite):
+ *   ./bin/tailwindcss -i resources/css/app.css -o public/css/app.css --minify
+ *   ./bin/tailwindcss -i resources/css/app.css -o public/css/app.css --watch
+ */
+@import "tailwindcss";
+
+@source "../views";
+@source "../../app/View";
+
+/* Tokens do tema "lanterna": fundo escuro, destaque âmbar e uma cor por sistema. */
+@theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-titulo: "Bricolage Grotesque", "Inter", ui-sans-serif, sans-serif;
+
+    /* Superfícies */
+    --color-fundo: #121418;
+    --color-fundo-profundo: #0e1013;
+    --color-recuo: #16181c;
+    --color-superficie: #1a1d22;
+    --color-superficie-2: #22262d;
+    --color-linha: #262a31;
+    --color-borda: #2e333b;
+    --color-borda-forte: #3a4049;
+    --color-marcador: #5a606a;
+
+    /* Texto */
+    --color-texto: #eee9df;
+    --color-texto-2: #d8d2c7;
+    --color-suave: #aba59a;
+    --color-placeholder: #8f8a81;
+
+    /* Destaque */
+    --color-ambar: #e8b54a;
+    --color-ambar-claro: #f3c969;
+    --color-ambar-hover: #ffe09a;
+    --color-ambar-fundo: #2b2414;
+    --color-ambar-borda: #8a6a2a;
+    --color-sobre-ambar: #1a1305;
+    --color-avatar: #3b2f1a;
+
+    /* Sistemas */
+    --color-tormenta: #e5646b;
+    --color-tormenta-fundo: #3a1d20;
+    --color-tormenta-texto: #f3a0a5;
+    --color-tormenta-borda: #6b2e33;
+    --color-dnd: #74b3f0;
+    --color-dnd-fundo: #18283a;
+    --color-dnd-texto: #a6cff5;
+    --color-dnd-borda: #2d4c6e;
+
+    /* Estados */
+    --color-sucesso: #7bc79a;
+    --color-sucesso-fundo: #173023;
+    --color-sucesso-texto: #9bddb5;
+    --color-perigo: #f59a9a;
+    --color-perigo-fundo: #1e1718;
+    --color-perigo-borda: #5a2b2f;
+    --color-perigo-forte: #c2545b;
+    --color-erro-fundo: #3a1d20;
+    --color-erro-texto: #ffc9c9;
+}
+
+@layer base {
+    html {
+        color-scheme: dark;
+    }
+
+    body {
+        @apply bg-fundo font-sans text-texto antialiased;
+    }
+
+    a {
+        @apply text-ambar-claro hover:text-ambar-hover;
+    }
+
+    ::placeholder {
+        color: var(--color-placeholder);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-ambar-claro);
+        outline-offset: 2px;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    /* Campos de formulário */
+    .rn-input {
+        @apply h-12 w-full rounded-[10px] border border-borda-forte bg-fundo px-3.5 text-[15px] text-texto;
+    }
+
+    .rn-input-invalido {
+        @apply border-tormenta;
+    }
+
+    .rn-rotulo {
+        @apply text-sm font-medium text-texto;
+    }
+
+    /* Cartões e blocos */
+    .rn-cartao {
+        @apply rounded-2xl border border-borda bg-superficie;
+    }
+
+    .rn-titulo-pagina {
+        @apply font-titulo text-4xl font-extrabold tracking-tight;
+    }
+
+    .rn-sobretitulo {
+        @apply text-xs font-semibold uppercase tracking-[0.08em] text-suave;
+    }
+
+    /* Opção marcável (checkbox ou radio dentro de um rótulo) */
+    .rn-opcao {
+        @apply flex min-h-11 cursor-pointer items-center gap-2.5 rounded-[10px] border border-borda-forte bg-fundo px-3.5 text-sm has-checked:border-ambar-borda has-checked:bg-ambar-fundo;
+    }
+
+    .rn-opcao input {
+        @apply m-0 size-[18px] accent-ambar;
+    }
+}

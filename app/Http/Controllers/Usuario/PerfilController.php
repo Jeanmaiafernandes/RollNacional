@@ -5,41 +5,35 @@ namespace App\Http\Controllers\Usuario;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Usuario\AtualizarPerfilRequest;
 use App\Http\Requests\Usuario\AtualizarSenhaRequest;
+use App\Models\Usuario;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class PerfilController extends Controller
 {
-    public function exibir(Request $request): View
+    public function perfil(Request $request): View
     {
-        return view('usuarios.perfil', [
-            'usuarios' => $request->user(),
-        ]);
+        return view('usuarios.perfil', ['perfil' => $request->user()]);
     }
 
-    public function atualizar(AtualizarPerfilRequest $request): RedirectResponse
+    public function atualizarPerfil(AtualizarPerfilRequest $request): RedirectResponse
     {
-        $dados = $request->validated();
+        $request->user()->update($request->validated());
 
-        $usuario = $request->user();
-        $usuario->nome = $dados['nome'];
-        $usuario->email = $dados['email'];
-        $usuario->save();
-
-        return redirect()->route('perfil')
-            ->with('sucesso', 'Dados atualizados com sucesso!');
+        return redirect()->back()->with('sucesso', 'Dados atualizados.');
     }
 
     public function atualizarSenha(AtualizarSenhaRequest $request): RedirectResponse
     {
-        $dados = $request->validated();
+        $request->session()->put(
+            'password_hash_web',
+            Auth::guard('web')->hashPasswordForCookie($request->user()->getAuthPassword())
+        );
 
-        $usuario = $request->user();
-        $usuario->senha = $dados['senha'];
-        $usuario->save();
+        $request->session()->put('password_hash_web', $request->user()->getAuthPassword());
 
-        return redirect()->route('perfil')
-            ->with('sucesso', 'Senha atualizada com sucesso!');
+        return redirect()->back()->with('sucesso', 'Dados atualizados.');
     }
 }

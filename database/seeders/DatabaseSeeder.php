@@ -9,8 +9,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(SistemaJogoSeeder::class);
-
         if (app()->environment('local')) {
             Usuario::query()->firstOrCreate(
                 ['email' => 'admin@mesa.localhost'],
