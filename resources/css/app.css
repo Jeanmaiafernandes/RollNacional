@@ -1,128 +1,355 @@
 /*
- * RollNacional — folha de estilos de entrada do Tailwind.
- *
- * Compilada pelo Tailwind Standalone CLI (sem Node nem Vite):
+ * RollNacional — estilos (Tailwind v4, Standalone CLI)
  *   ./bin/tailwindcss -i resources/css/app.css -o public/css/app.css --minify
  *   ./bin/tailwindcss -i resources/css/app.css -o public/css/app.css --watch
  */
 @import "tailwindcss";
 
 @source "../views";
-@source "../../app/View";
 
-/* Tokens do tema "lanterna": fundo escuro, destaque âmbar e uma cor por sistema. */
+/* ------------------------------------------------------------------ Tokens */
 @theme {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-    --font-titulo: "Bricolage Grotesque", "Inter", ui-sans-serif, sans-serif;
+    --font-texto: "Zilla Slab", Georgia, serif;
+    --font-rotulo: "Oswald", "Arial Narrow", sans-serif;
 
-    /* Superfícies */
-    --color-fundo: #121418;
-    --color-fundo-profundo: #0e1013;
-    --color-recuo: #16181c;
-    --color-superficie: #1a1d22;
-    --color-superficie-2: #22262d;
-    --color-linha: #262a31;
-    --color-borda: #2e333b;
-    --color-borda-forte: #3a4049;
-    --color-marcador: #5a606a;
+    --color-papel: #ffffff;
+    --color-marfim: #f7f3ec;
+    --color-marfim-2: #efe6d6;
+    --color-linha: #e6ddd0;
+    --color-linha-2: #d8cbb8;
+    --color-pontilhado: #c9b98f;
 
-    /* Texto */
-    --color-texto: #eee9df;
-    --color-texto-2: #d8d2c7;
-    --color-suave: #aba59a;
-    --color-placeholder: #8f8a81;
+    --color-tinta: #1c1515;
+    --color-tinta-2: #4a3f3a;
+    --color-tinta-3: #7a6c64;
 
-    /* Destaque */
-    --color-ambar: #e8b54a;
-    --color-ambar-claro: #f3c969;
-    --color-ambar-hover: #ffe09a;
-    --color-ambar-fundo: #2b2414;
-    --color-ambar-borda: #8a6a2a;
-    --color-sobre-ambar: #1a1305;
-    --color-avatar: #3b2f1a;
+    --color-vermelho: #a8191f;
+    --color-vermelho-escuro: #6b0f14;
+    --color-vermelho-faixa: #8c1419;
+    --color-vermelho-claro: #fbeeee;
 
-    /* Sistemas */
-    --color-tormenta: #e5646b;
-    --color-tormenta-fundo: #3a1d20;
-    --color-tormenta-texto: #f3a0a5;
-    --color-tormenta-borda: #6b2e33;
-    --color-dnd: #74b3f0;
-    --color-dnd-fundo: #18283a;
-    --color-dnd-texto: #a6cff5;
-    --color-dnd-borda: #2d4c6e;
+    --color-dourado: #c8962e;
+    --color-dourado-texto: #8a6516;
+    --color-dourado-claro: #e3b75a;
+    --color-dourado-fundo: #fbf6e8;
 
-    /* Estados */
-    --color-sucesso: #7bc79a;
-    --color-sucesso-fundo: #173023;
-    --color-sucesso-texto: #9bddb5;
-    --color-perigo: #f59a9a;
-    --color-perigo-fundo: #1e1718;
-    --color-perigo-borda: #5a2b2f;
-    --color-perigo-forte: #c2545b;
-    --color-erro-fundo: #3a1d20;
-    --color-erro-texto: #ffc9c9;
+    --color-tormenta: #8a2a2e;
+    --color-dnd: #244a72;
 }
 
+/* ------------------------------------------------------------------ Base */
 @layer base {
-    html {
-        color-scheme: dark;
+    body {
+        background: var(--color-papel);
+        color: var(--color-tinta);
+        font-family: var(--font-texto);
+        -webkit-font-smoothing: antialiased;
     }
 
-    body {
-        @apply bg-fundo font-sans text-texto antialiased;
+    h1, h2, h3, h4 {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 0.95;
     }
 
     a {
-        @apply text-ambar-claro hover:text-ambar-hover;
+        color: var(--color-vermelho);
+    }
+
+    a:hover {
+        color: var(--color-vermelho-escuro);
+    }
+
+    button, input, textarea, select {
+        font-family: inherit;
     }
 
     ::placeholder {
-        color: var(--color-placeholder);
+        color: #a3958a;
     }
 
     :focus-visible {
-        outline: 2px solid var(--color-ambar-claro);
+        outline: 3px solid var(--color-dourado-claro);
         outline-offset: 2px;
-    }
-
-    [x-cloak] {
-        display: none !important;
     }
 }
 
+/* ------------------------------------------------------------------ Peças do layout */
 @layer components {
-    /* Campos de formulário */
-    .rn-input {
-        @apply h-12 w-full rounded-[10px] border border-borda-forte bg-fundo px-3.5 text-[15px] text-texto;
+    /* Rótulos em Oswald: menus, botões, legendas */
+    .rotulo {
+        font-family: var(--font-rotulo);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-tinta-2);
     }
 
-    .rn-input-invalido {
-        @apply border-tormenta;
+    .sobrelinha {
+        font-family: var(--font-rotulo);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-dourado-texto);
     }
 
-    .rn-rotulo {
-        @apply text-sm font-medium text-texto;
+    /* Duas barrinhas, vermelha e dourada, depois do título */
+    .barras::after {
+        content: "";
+        display: inline-block;
+        width: 18px;
+        height: 0.72em;
+        margin-left: 0.45em;
+        vertical-align: baseline;
+        background: linear-gradient(90deg, var(--color-vermelho) 0 7px, transparent 7px 11px, var(--color-dourado) 11px 18px);
     }
 
-    /* Cartões e blocos */
-    .rn-cartao {
-        @apply rounded-2xl border border-borda bg-superficie;
+    /* Botões */
+    .btn,
+    .btn-sec {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 50px;
+        padding: 0 24px;
+        box-sizing: border-box;
+        font-family: var(--font-rotulo);
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
     }
 
-    .rn-titulo-pagina {
-        @apply font-titulo text-4xl font-extrabold tracking-tight;
+    .btn {
+        background: var(--color-vermelho);
+        color: #fff;
+        border: 0;
+        box-shadow: 0 4px 0 var(--color-vermelho-escuro);
     }
 
-    .rn-sobretitulo {
-        @apply text-xs font-semibold uppercase tracking-[0.08em] text-suave;
+    .btn:hover {
+        background: #931419;
+        color: #fff;
     }
 
-    /* Opção marcável (checkbox ou radio dentro de um rótulo) */
-    .rn-opcao {
-        @apply flex min-h-11 cursor-pointer items-center gap-2.5 rounded-[10px] border border-borda-forte bg-fundo px-3.5 text-sm has-checked:border-ambar-borda has-checked:bg-ambar-fundo;
+    .btn:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 var(--color-vermelho-escuro);
     }
 
-    .rn-opcao input {
-        @apply m-0 size-[18px] accent-ambar;
+    .btn-sec {
+        background: var(--color-papel);
+        color: var(--color-tinta);
+        border: 1.5px solid var(--color-tinta);
+        font-weight: 600;
     }
+
+    .btn-sec:hover {
+        background: var(--color-marfim);
+        color: var(--color-tinta);
+    }
+
+    .btn-pequeno {
+        height: 40px;
+        padding: 0 16px;
+        font-size: 14px;
+    }
+
+    .link-rotulo {
+        font-family: var(--font-rotulo);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    /* Formulário */
+    .entrada {
+        width: 100%;
+        height: 52px;
+        box-sizing: border-box;
+        padding: 0 14px;
+        border: 2px solid var(--color-tinta);
+        background: var(--color-papel);
+        font-size: 18px;
+        color: var(--color-tinta);
+    }
+
+    .entrada[aria-invalid="true"] {
+        border-color: var(--color-vermelho);
+        background: #fffafa;
+    }
+
+    textarea.entrada {
+        height: auto;
+        min-height: 120px;
+        padding: 12px 14px;
+        line-height: 1.55;
+        resize: vertical;
+    }
+
+    .erro {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        color: var(--color-vermelho);
+    }
+
+    .dica {
+        font-size: 15px;
+        font-style: italic;
+        color: var(--color-tinta-3);
+    }
+
+    /* Caixa com borda grossa e faixa colorida no topo */
+    .cartao {
+        background: var(--color-papel);
+        border: 2px solid var(--color-tinta);
+        box-shadow: inset 0 6px 0 var(--faixa, var(--color-vermelho));
+        padding: 32px 28px 28px;
+    }
+
+    /* Etiqueta preta "rasgada" */
+    .etiqueta {
+        display: inline-block;
+        padding: 7px 18px 9px;
+        background: #141010;
+        color: var(--color-dourado-claro);
+        font-family: var(--font-rotulo);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transform: rotate(-1.5deg);
+        clip-path: polygon(0 10%, 4% 0, 30% 6%, 62% 0, 97% 5%, 100% 0, 99% 88%, 95% 100%, 60% 94%, 25% 100%, 2% 95%, 0 100%);
+    }
+
+    /* Pedaço de fita adesiva */
+    .fita {
+        position: absolute;
+        top: -11px;
+        left: 50%;
+        width: 72px;
+        height: 22px;
+        margin-left: -36px;
+        background: rgba(200, 150, 46, 0.45);
+    }
+
+    .fita-vermelha {
+        background: rgba(168, 25, 31, 0.3);
+    }
+
+    /* Foto com moldura branca */
+    .polaroide {
+        position: relative;
+        margin: 0;
+        padding: 14px 14px 44px;
+        background: var(--color-papel);
+        border: 1px solid var(--color-linha);
+        box-shadow: 0 22px 40px rgba(60, 20, 10, 0.16);
+    }
+
+    .polaroide figcaption {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-rotulo);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-tinta-3);
+    }
+
+    /* Bilhete preso com fita */
+    .bilhete {
+        position: relative;
+        padding: 24px 20px 20px;
+        background: #fffdf8;
+        border: 1px solid var(--color-linha);
+        box-shadow: 0 6px 14px rgba(60, 20, 10, 0.1);
+    }
+
+    .bilhete p {
+        font-size: 18px;
+        font-style: italic;
+        line-height: 1.45;
+        color: #2c2420;
+    }
+
+    /* Lista com linha pontilhada até o valor */
+    .pontilhado {
+        flex: 1 1 auto;
+        border-bottom: 1px dotted var(--color-pontilhado);
+    }
+
+    /* Selo de sistema com a cor dele na lateral */
+    .selo {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px 4px 0;
+        border: 1px solid var(--color-tinta);
+        background: var(--color-papel);
+        box-shadow: inset 6px 0 0 var(--cor, var(--color-vermelho));
+        padding-left: 14px;
+        font-family: var(--font-rotulo);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-tinta);
+    }
+
+    /* Aviso de sucesso */
+    .aviso {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        background: var(--color-dourado-fundo);
+        border: 1.5px solid var(--color-dourado);
+        box-shadow: inset 5px 0 0 var(--color-dourado);
+        font-size: 17px;
+    }
+
+    .aviso-erro {
+        background: #fffafa;
+        border-color: var(--color-vermelho);
+        box-shadow: inset 5px 0 0 var(--color-vermelho);
+    }
+}
+
+/* ------------------------------------------------------------------ Banner animado da página inicial */
+@keyframes rn-sobe { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+@keyframes rn-abre { from { opacity: 0; transform: scale(.55) rotate(-12deg); } to { opacity: 1; transform: none; } }
+@keyframes rn-risca { from { stroke-dashoffset: 260; } to { stroke-dashoffset: 0; } }
+@keyframes rn-flutua { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(0, -16px) rotate(5deg); } }
+@keyframes rn-flutua2 { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(10px, 12px) rotate(-7deg); } }
+@keyframes rn-gira { to { transform: rotate(360deg); } }
+@keyframes rn-pisca { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+
+.rn-linha { animation: rn-sobe .8s cubic-bezier(.2, .7, .2, 1) both; }
+.rn-janela { transform-box: view-box; transform-origin: 905px 292px; animation: rn-abre 1s cubic-bezier(.2, .7, .2, 1) .2s both; }
+.rn-fenda { stroke-dasharray: 260; animation: rn-risca 1.1s ease-out .6s both; }
+.rn-f1, .rn-f2 { transform-box: fill-box; transform-origin: center; }
+.rn-f1 { animation: rn-flutua 9s ease-in-out infinite; }
+.rn-f2 { animation: rn-flutua2 11s ease-in-out infinite; }
+.rn-anel { transform-box: view-box; transform-origin: 905px 292px; animation: rn-gira 40s linear infinite; }
+.rn-brilho { animation: rn-pisca 3.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+    .rn-linha, .rn-banner * { animation: none !important; }
 }

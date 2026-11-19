@@ -3,37 +3,52 @@
 namespace App\Http\Controllers\Usuario;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Usuario\AtualizarPerfilRequest;
+use App\Http\Requests\Usuario\AtualizarEmailRequest;
 use App\Http\Requests\Usuario\AtualizarSenhaRequest;
-use App\Models\Usuario;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
+/**
+ * Dados da conta (e-mail) e troca de senha do usuário logado.
+ */
 class PerfilController extends Controller
 {
-    public function perfil(Request $request): View
+    public function dados(Request $request): View
     {
-        return view('usuarios.perfil', ['perfil' => $request->user()]);
+        return view('conta.dados', ['usuario' => $request->user()]);
     }
 
-    public function atualizarPerfil(AtualizarPerfilRequest $request): RedirectResponse
+    public function atualizarEmail(AtualizarEmailRequest $request): RedirectResponse
     {
-        $request->user()->update($request->validated());
+        $request->user()->forceFill([
+            'email' => $request->validated('email'),
+        ])->save();
 
-        return redirect()->back()->with('sucesso', 'Dados atualizados.');
+        return redirect()->route('conta.dados')->with('sucesso', 'Seu e-mail foi atualizado.');
+    }
+
+    public function senha(): View
+    {
+        return view('conta.senha');
     }
 
     public function atualizarSenha(AtualizarSenhaRequest $request): RedirectResponse
     {
+        $usuario = $request->user();
+
+        $usuario->forceFill([
+            'senha' => Hash::make($request->validated('senha')),
+        ])->save();
+
+        // Mantém esta sessão válida; as sessões de outros aparelhos caem pelo middleware auth.session.
         $request->session()->put(
-            'password_hash_web',
-            Auth::guard('web')->hashPasswordForCookie($request->user()->getAuthPassword())
+            'password_hash_'.Auth::getDefaultDriver(),
+            Auth::guard()->hashPasswordForCookie($usuario->getAuthPassword())
         );
 
-        $request->session()->put('password_hash_web', $request->user()->getAuthPassword());
-
-        return redirect()->back()->with('sucesso', 'Dados atualizados.');
+        return redirect()->route('conta.senha')->with('sucesso', 'Sua senha foi trocada.');
     }
 }

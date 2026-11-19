@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\UsuarioFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,26 +12,32 @@ class Usuario extends Authenticatable
 
     protected $table = 'usuarios';
 
-    protected $guarded = [];
+    const CREATED_AT = 'criado_em';
+    const UPDATED_AT = 'atualizado_em';
 
-    protected $hidden = ['senha', 'remember_token'];
+    protected $authPasswordName = 'senha';
+
+    protected $guarded = [
+        'id',
+        'eh_admin',
+        'plano',
+        'email_verified_at',
+        'remember_token',
+    ];
+
+    protected $hidden = [
+        'senha',
+        'remember_token',
+    ];
 
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'senha' => 'hashed',
-            'administrador' => 'boolean',
+            'disponibilidade' => 'array',
+            'eh_admin' => 'boolean',
+            'mostrar_personagens' => 'boolean',
         ];
-    }
-
-    public function getAuthPasswordName(): string
-    {
-        return 'senha';
-    }
-
-    protected static function newFactory(): UsuarioFactory
-    {
-        return UsuarioFactory::new();
     }
 }

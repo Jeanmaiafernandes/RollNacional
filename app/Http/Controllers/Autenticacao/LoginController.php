@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Autenticacao\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class LoginController extends Controller
@@ -17,22 +18,19 @@ class LoginController extends Controller
 
     public function entrar(LoginRequest $request): RedirectResponse
     {
-        $dados = $request->validated();
-
         $credenciais = [
-            'email' => $dados['email'],
-            'password' => $dados['senha'],
+            'email' => $request->validated('email'),
+            'password' => $request->validated('senha'),
         ];
 
         if (! Auth::attempt($credenciais, $request->boolean('lembrar'))) {
-            return back()
-                ->withErrors(['email' => 'E-mail ou senha incorretos!'])
-                ->onlyInput('email');
+            throw ValidationException::withMessages([
+                'email' => 'E-mail ou senha incorretos.',
+            ]);
         }
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('inicio'))
-            ->with('sucesso', 'Login realizado com sucesso!');
+        return redirect()->intended(route('inicio'));
     }
 }

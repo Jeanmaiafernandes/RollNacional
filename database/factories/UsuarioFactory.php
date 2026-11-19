@@ -14,6 +14,7 @@ class UsuarioFactory extends Factory
     {
         return [
             'nome' => fake()->name(),
+            'nome_usuario' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'senha' => static::$senha ??= Hash::make('senha123'),

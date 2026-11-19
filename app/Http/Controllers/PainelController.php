@@ -8,6 +8,6 @@ class PainelController extends Controller
 {
     public function __invoke(): View
     {
-        return view('painel.index');
+        return view('inicio');
     }
 }

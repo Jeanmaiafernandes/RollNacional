@@ -1,52 +1,38 @@
 @extends('layouts.visitante')
 
 @section('titulo', 'Entrar')
+@section('capitulo', 'Entrada')
+@section('imagem', asset('img/site/aventureiros.webp'))
+@section('legenda', 'A jornada continua')
+@section('frase', 'A mesa estava esperando por você')
 
 @section('conteudo')
-    <h2 class="font-titulo text-3xl font-bold">Bem-vindo de volta</h2>
-    <p class="mt-1.5 text-sm text-suave">Entre para continuar suas fichas.</p>
+    <div class="flex flex-col gap-2.5">
+        <h1 class="barras text-5xl">Entrar</h1>
+        <p class="text-lg text-tinta-2">Suas fichas continuam onde você deixou.</p>
+    </div>
 
-    <form method="POST" action="{{ route('entrar') }}" class="mt-7 flex flex-col gap-4">
+    @include('layouts.partials.avisos')
+
+    @if ($errors->any() && ! $errors->hasAny(['email', 'senha']))
+        <div role="alert" class="aviso aviso-erro">{{ $errors->first() }}</div>
+    @endif
+
+    <form method="POST" action="{{ route('entrar') }}" class="flex flex-col gap-5" novalidate>
         @csrf
 
-        {{-- Cada campo é uma caixa de ficha: rótulo pequeno em cima, valor embaixo --}}
-        <div>
-            <label @class([
-                'block border bg-fundo px-3.5 pb-2 pt-2.5 focus-within:border-ambar',
-                'border-tormenta' => $errors->has('email'),
-                'border-borda-forte' => ! $errors->has('email'),
-            ])>
-                <span class="block text-[11px] font-semibold uppercase tracking-[0.14em] text-suave">E-mail</span>
-                <input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email"
-                       class="mt-1 w-full border-0 bg-transparent p-0 text-[15px] text-texto outline-none">
-            </label>
-            @error('email')
-            <p class="mt-1.5 text-sm text-erro-texto">{{ $message }}</p>
-            @enderror
-        </div>
+        <x-campo nome="email" rotulo="E-mail" tipo="email" :valor="old('email')" autocomplete="email" placeholder="voce@exemplo.com" required autofocus />
+        <x-campo nome="senha" rotulo="Senha" tipo="password" autocomplete="current-password" required />
 
-        <div>
-            <label @class([
-                'block border bg-fundo px-3.5 pb-2 pt-2.5 focus-within:border-ambar',
-                'border-tormenta' => $errors->has('password'),
-                'border-borda-forte' => ! $errors->has('password'),
-            ])>
-                <span class="block text-[11px] font-semibold uppercase tracking-[0.14em] text-suave">Senha</span>
-                <input id="senha" name="senha" type="password" required autocomplete="current-password"
-                       class="mt-1 w-full border-0 bg-transparent p-0 text-[15px] text-texto outline-none">
-            </label>
-            @error('password')
-            <p class="mt-1.5 text-sm text-erro-texto">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <label class="flex cursor-pointer items-center gap-2.5 py-1 text-sm text-texto-2">
-            <input type="checkbox" name="lembrar" value="1" @checked(old('lembrar')) class="size-4 accent-ambar">
-            Manter conectado neste dispositivo
+        <label class="flex cursor-pointer items-center gap-2.5 text-[17px] text-tinta-2">
+            <input type="checkbox" name="lembrar" value="1" @checked(old('lembrar')) class="m-0 size-5 accent-vermelho">
+            Manter conectado neste aparelho
         </label>
 
-        <button type="submit" class="mt-2 h-12 cursor-pointer bg-ambar text-sm font-bold uppercase tracking-[0.14em] text-sobre-ambar hover:bg-ambar-claro">
-            Entrar na mesa
-        </button>
+        <button type="submit" class="btn h-14 text-lg">Entrar na mesa</button>
     </form>
+
+    <p class="border-t border-dotted border-pontilhado pt-4 text-[17px] text-tinta-2">
+        Primeira vez por aqui? <a href="{{ route('registrar') }}" class="font-semibold">Criar conta</a>
+    </p>
 @endsection

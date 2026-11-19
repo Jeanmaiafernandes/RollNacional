@@ -1,58 +1,171 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# RollNacional
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mesa virtual para RPG, pensada para os sistemas nacionais e para os que os outros sites esquecem. Começa por **Tormenta20** e **D&D 5e**: fichas que calculam sozinhas, compêndio de regras e, na próxima etapa, a mesa de jogo em tempo real.
 
-## About Laravel
+## Estado atual — Etapa 1
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Área | Situação |
+| --- | --- |
+| Cadastro, login e sair | Pronto (sem recuperação de senha e sem verificação de e-mail, por decisão do projeto) |
+| Página inicial pública | Pronta, com banner animado em SVG |
+| Início (painel) | Pronto, com estados vazios enquanto não há fichas |
+| Perfil público | Pronto (`/usuarios/{nome_usuario}`) |
+| Editar perfil, dados da conta e senha | Prontos |
+| Sistemas e compêndio | Em construção (tabela `sistemas` em andamento) |
+| Personagens e fichas | Em construção |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tecnologias
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Laravel 13** com **PHP 8.4**
+- **Blade** para as views, sem starter kit
+- **Tailwind CSS v4** pelo Standalone CLI (sem Node e sem Vite)
+- **Alpine.js** servido localmente em `public/js/alpine.min.js`
+- Fontes **Oswald** (rótulos, menus, botões) e **Zilla Slab** (títulos e textos), pelo Google Fonts
 
-## Learning Laravel
+## Requisitos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.4 com as extensões padrão do Laravel
+- Composer
+- Um banco de dados suportado pelo Laravel (MySQL, MariaDB, PostgreSQL ou SQLite)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalação
 
 ```bash
-composer require laravel/boost --dev
+git clone <url-do-repositorio> rollnacional
+cd rollnacional
 
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+No `.env`, configure o banco e deixe idioma e fuso no Brasil:
 
-## Contributing
+```dotenv
+APP_NAME=RollNacional
+APP_LOCALE=pt_BR
+APP_TIMEZONE=America/Sao_Paulo
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Depois:
 
-## Code of Conduct
+```bash
+php artisan migrate
+php artisan storage:link
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### CSS (Tailwind Standalone)
 
-## Security Vulnerabilities
+Baixe o binário uma vez (Linux x64; para outros sistemas, troque o nome do arquivo pelo da sua plataforma na página de releases do Tailwind):
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+mkdir -p bin
+curl -sSL -o bin/tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
+chmod +x bin/tailwindcss
+```
 
-## License
+Compile:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+./bin/tailwindcss -i resources/css/app.css -o public/css/app.css --minify
+```
+
+Durante o desenvolvimento, deixe recompilando a cada alteração:
+
+```bash
+./bin/tailwindcss -i resources/css/app.css -o public/css/app.css --watch
+```
+
+Toda classe nova usada numa view só passa a existir depois de recompilar.
+
+### Rodando
+
+```bash
+php artisan serve
+```
+
+## Comandos úteis
+
+| Comando | Para quê |
+| --- | --- |
+| `php artisan optimize:clear` | Limpa cache de views, rotas e configuração |
+| `php artisan view:clear` | Limpa só o cache das views |
+| `php artisan route:list --except-vendor` | Lista as rotas do projeto |
+| `php artisan migrate:fresh` | Recria o banco do zero (apaga os dados) |
+
+## Estrutura
+
+```
+app/
+├── Http/Controllers/
+│   ├── Autenticacao/        CadastroController, LoginController, LogoutController
+│   ├── Usuario/             UsuarioController (perfil público),
+│   │                        EditarPerfilController, PerfilController (dados e senha)
+│   └── PainelController.php
+├── Http/Requests/
+│   ├── Autenticacao/        CadastroRequest, LoginRequest
+│   └── Usuario/             AtualizarPerfilPublicoRequest, AtualizarEmailRequest, AtualizarSenhaRequest
+└── Models/Usuario.php
+
+routes/
+├── web.php                  página inicial pública, painel e carregamento de routes/web/*.php
+├── autenticacao.php         cadastro, login e sair
+└── web/                     um arquivo por área (conta.php, usuarios.php, ...)
+
+resources/
+├── css/app.css              tokens do tema, classes de componente e animações do banner
+└── views/
+    ├── layouts/             app (logado), publico (página inicial), visitante (entrar e criar conta)
+    │   └── partials/        head, cabeçalhos, rodapé, avisos, marca, runas
+    ├── components/          campo (formulário) e retrato (foto ou silhueta)
+    ├── publico/             página inicial e o banner animado
+    ├── autenticacao/        entrar e registrar
+    ├── conta/               perfil, dados, senha e o menu lateral
+    ├── usuarios/            perfil público
+    └── inicio.blade.php     painel
+
+public/img/
+├── site/                    ilustrações do site (castelo, aventureiros, dragão)
+└── sistemas/                capas e artes dos sistemas
+```
+
+## Rotas principais
+
+| Método | Endereço | Nome | O que faz |
+| --- | --- | --- | --- |
+| GET | `/` | `pagina-inicial` | Página pública; quem está logado vai para o painel |
+| GET/POST | `/registrar` | `registrar` | Cadastro |
+| GET/POST | `/entrar` | `entrar` | Login |
+| POST | `/sair` | `sair` | Logout |
+| GET | `/inicio` | `inicio` | Painel do usuário |
+| GET | `/usuarios/{nome_usuario}` | `usuarios.show` | Perfil público |
+| GET/PUT | `/conta/perfil` | `conta.perfil` / `conta.perfil.atualizar` | Editar perfil público |
+| GET/PUT | `/conta` | `conta.dados` / `conta.email` | Dados da conta (e-mail) |
+| GET/PUT | `/conta/senha` | `conta.senha` / `conta.senha.atualizar` | Trocar senha |
+
+Tudo fora de `/`, `/entrar` e `/registrar` exige login (`auth` e `auth.session`).
+
+## Convenções
+
+- **Código em português**: tabelas, colunas, rotas, classes e views.
+- **Tabela `usuarios`**, model `App\Models\Usuario`:
+  - a senha fica na coluna `senha` (o model define `$authPasswordName = 'senha'`);
+  - as datas são `criado_em` e `atualizado_em` (constantes `CREATED_AT` e `UPDATED_AT`);
+  - no `Auth::attempt`, a senha vai na chave `password`, porque é a chave que o Laravel usa para comparar com o hash, mesmo com a coluna chamada `senha`.
+- **Confirmação de senha**: o campo se chama `senha_confirmation` (regra `confirmed`).
+- **Views cruas**: páginas com `@extends` e `@section`. Componentes só para o que se repete em várias telas (`x-campo`, `x-retrato`).
+- **Visual**: cores e fontes como tokens no `@theme` do `app.css`. Peças repetidas viram classes (`.btn`, `.btn-sec`, `.cartao`, `.bilhete`, `.etiqueta`, `.rotulo`...), em vez de listas longas de utilitários no Blade.
+- **Links opcionais**: menus e botões que apontam para áreas ainda não criadas usam `Route::has()` e somem enquanto a rota não existe.
+- **Uploads** (fotos de perfil) ficam em `storage/app/public/avatares` e são servidos pelo link criado no `storage:link`.
+
+## Próximos passos
+
+1. Tabela `sistemas` e as telas de sistemas e compêndio.
+2. Personagens: lista, nova ficha e as fichas de Tormenta20 e D&D 5e.
+3. Etapa 2: mesa virtual em tempo real (mapa, rolagens compartilhadas).
+
+## Créditos e marcas
+
+- Tormenta20 é marca da Jambô Editora. Dungeons & Dragons é marca da Wizards of the Coast. O RollNacional não tem vínculo oficial com as editoras.
+- As capas e artes dos sistemas pertencem às respectivas editoras. Confirme a autorização de uso antes de publicar o site.
+- As ilustrações em `public/img/site` foram geradas para este projeto.
