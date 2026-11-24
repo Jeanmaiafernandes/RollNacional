@@ -2,18 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\Usuario;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            SistemaSeeder::class,
+        ]);
+
         if (app()->environment('local')) {
-            Usuario::query()->firstOrCreate(
-                ['email' => 'admin@mesa.localhost'],
-                ['nome' => 'Admin', 'senha' => 'senha123', 'administrador' => true],
-            );
+            $this->call(UsuariosSeeder::class);
         }
+
+        // A conta de admin é criada à parte, porque o seeder pergunta os dados:
+        // php artisan db:seed --class=AdminSeeder
     }
 }

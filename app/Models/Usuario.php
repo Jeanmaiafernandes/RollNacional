@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+#[Table(name: 'usuarios')]
 class Usuario extends Authenticatable
 {
     use HasFactory, Notifiable;
-
-    protected $table = 'usuarios';
 
     const CREATED_AT = 'criado_em';
     const UPDATED_AT = 'atualizado_em';

@@ -3,24 +3,36 @@
 namespace Database\Seeders;
 
 use App\Models\Usuario;
+use Database\Factories\UsuarioFactory;
 use Illuminate\Database\Seeder;
 
+/**
+ * Contas de exemplo para desenvolvimento. Não roda em produção.
+ * Todas usam a senha de UsuarioFactory::SENHA.
+ */
 class UsuariosSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = Usuario::query()->firstOrNew(['email' => 'admin@mesa.localhost']);
-        $admin->nome = 'Administrador';
-        $admin->senha = 'admin12345';   // o cast "hashed" gera o hash
-        $admin->administrador = true;
-        $admin->email_verified_at = now();
-        $admin->save();
+        if (app()->isProduction()) {
+            $this->command?->warn('UsuarioSeeder ignorado: não cria contas de exemplo em produção.');
 
-        $mestre = Usuario::query()->firstOrNew(['email' => 'mestre@mesa.localhost']);
-        $mestre->nome = 'Mestre Teste';
-        $mestre->senha = 'senha12345';
-        $mestre->administrador = false;
-        $mestre->email_verified_at = now();
-        $mestre->save();
+            return;
+        }
+
+        // Conta fixa para entrar no site durante o desenvolvimento
+        Usuario::factory()->create([
+            'nome' => 'Jogadora Teste',
+            'nome_usuario' => 'jogadora',
+            'email' => 'jogadora@exemplo.test',
+            'bio' => 'Conta de teste da RollNacional.',
+            'mostrar_personagens' => true,
+        ]);
+
+        Usuario::factory()->count(8)->create();
+        Usuario::factory()->semBio()->count(2)->create();
+        Usuario::factory()->personagensOcultos()->count(2)->create();
+
+        $this->command?->info('Contas de exemplo criadas. Senha de todas: '.UsuarioFactory::SENHA);
     }
 }
