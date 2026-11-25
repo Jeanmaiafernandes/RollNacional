@@ -62,4 +62,14 @@ class Sistema extends Model
     {
         return self::APARENCIA[$this->slug][$campo] ?? null;
     }
+
+    protected function origemTexto(): Attribute
+    {
+        return Attribute::get(fn () => match ($this->origem) {
+            'nacional' => 'Nacional',
+            'independente' => 'Independente',
+            'estrangeiro' => 'Estrangeiro',
+            default => null,
+        });
+    }
 }

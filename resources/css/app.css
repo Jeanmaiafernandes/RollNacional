@@ -505,6 +505,131 @@
         background: var(--color-tinta);
         color: #fff;
     }
+
+    /* Botão cheio em caixa normal (ação principal na linguagem de ficha) */
+    .btn-cheio {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        padding: 0 24px;
+        box-sizing: border-box;
+        border: 0;
+        border-radius: 4px;
+        background: var(--color-vermelho);
+        font-family: var(--font-rotulo);
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        color: #fff;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .btn-cheio:hover {
+        background: var(--color-vermelho-escuro);
+        color: #fff;
+    }
+
+    /* Lombada pequena, só de enfeite no topo da página do sistema.
+       ".livro.livro-pequeno" ganha da regra de .livro no @media, em qualquer tamanho de tela */
+    .livro.livro-pequeno {
+        width: 54px;
+        height: 128px;
+        padding: 12px 0 10px;
+        transition: none;
+    }
+
+    .livro.livro-pequeno:hover {
+        transform: none;
+    }
+
+    .livro-pequeno .livro-titulo {
+        font-size: 17px;
+    }
+
+    /* Na lombada pequena não cabe a sigla: fica só o nome */
+    .livro-pequeno > :last-child {
+        display: none;
+    }
+
+    /* Caixa de atributo da ficha */
+    .caixa-atributo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 84px;
+        height: 84px;
+        box-sizing: border-box;
+        border: 2.5px solid var(--color-tinta);
+        border-radius: 12px;
+        font-family: var(--font-rotulo);
+        font-size: 44px;
+        font-weight: 500;
+    }
+
+    .botao-ponto {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--color-tinta);
+        border-radius: 6px;
+        background: var(--color-papel);
+        font-family: var(--font-rotulo);
+        font-size: 22px;
+        line-height: 1;
+        color: var(--color-tinta);
+        cursor: pointer;
+    }
+
+    .botao-ponto:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
+    /* Carta do Grimório (frase mágica do Etmos) */
+    .carta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 104px;
+        height: 128px;
+        box-sizing: border-box;
+        padding: 0 0 12px;
+        overflow: hidden;
+        border: 1.5px solid var(--color-linha);
+        border-radius: 8px;
+        background: var(--color-papel);
+        color: var(--color-tinta-2);
+        cursor: pointer;
+        transition: transform 0.15s ease;
+    }
+
+    .carta::before {
+        content: "";
+        align-self: stretch;
+        height: 10px;
+        background: var(--cor);
+        opacity: 0.45;
+    }
+
+    .carta[aria-pressed="true"] {
+        border: 2.5px solid var(--color-tinta);
+        color: var(--color-tinta);
+        transform: translateY(-6px);
+        box-shadow: 0 6px 0 var(--color-dourado);
+    }
+
+    .carta[aria-pressed="true"]::before {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .carta { transition: none; }
+    }
 }
 
 /* ------------------------------------------------------------------ Banner animado da página inicial */

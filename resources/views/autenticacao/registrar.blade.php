@@ -1,7 +1,6 @@
 @extends('layouts.visitante')
 
 @section('titulo', 'Criar conta')
-@section('capitulo', 'Primeira sessão')
 @section('imagem', asset('img/site/castelo.webp'))
 @section('legenda', 'O reino à vista')
 @section('frase', 'Toda campanha começa com uma ficha')

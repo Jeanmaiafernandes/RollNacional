@@ -1,108 +1,134 @@
 @extends('layouts.app')
 
+{{--
+    Página de um sistema, aba Visão geral. A estrutura é a mesma para todos:
+    - do banco: nome, editora, cor, sigla, capa, descrição, dado e licença;
+    - de sistemas/conteudo/{slug}/ (cada arquivo é opcional):
+        principal.blade.php  "Para jogar" e "Na RollNacional", depois de "Sobre o sistema"
+        lateral.blade.php    linhas extras da ficha técnica
+--}}
+
+@php
+    $pasta = 'sistemas.conteudo.'.$sistema->slug;
+    $paragrafos = preg_split('/\n\s*\n/', trim((string) $sistema->descricao), -1, PREG_SPLIT_NO_EMPTY);
+    if ($paragrafos === []) {
+        $paragrafos = [$sistema->resumo ?? 'A descrição deste sistema ainda não foi escrita.'];
+    }
+    $temCompendio = Route::has('sistemas.compendio');
+    $temModelo = Route::has('sistemas.modelo');
+
+    // Capa deitada preenche a moldura; capa em pé (como a do Etmos) entra inteira, sem corte
+    $capaVertical = false;
+    if ($sistema->caminho_capa && is_file($arquivoCapa = storage_path('app/public/'.$sistema->caminho_capa))) {
+        [$larguraCapa, $alturaCapa] = getimagesize($arquivoCapa) ?: [1, 0];
+        $capaVertical = $alturaCapa > $larguraCapa;
+    }
+@endphp
+
 @section('titulo', $sistema->nome)
-@section('trilha')
-    <a href="{{ route('sistemas.index') }}">Sistemas</a> · {{ $sistema->nome }}
-@endsection
-@section('capitulo', 'Visão geral')
-
-@section('faixa')
-    <div class="flex flex-wrap items-end justify-between gap-6">
-        <div class="flex items-end gap-5">
-            @include('sistemas.partials.lombada')
-            <div class="flex flex-col items-start gap-1">
-                <span class="sobrelinha">{{ $sistema->editora }}</span>
-                <h1 class="text-4xl tracking-[0.1em] sm:text-5xl md:text-[68px]">{{ $sistema->nome }}</h1>
-                <span class="etiqueta mt-1">Visão geral</span>
-            </div>
-        </div>
-
-        @if (Route::has('personagens.create'))
-            <a href="{{ route('personagens.create', ['sistema' => $sistema->slug]) }}" class="btn">Criar ficha de {{ $sistema->nome }}</a>
-        @endif
-    </div>
-
-    @include('sistemas.partials.abas')
-@endsection
 
 @section('conteudo')
-    <div class="flex flex-wrap items-start gap-12">
-        <div class="flex min-w-0 flex-[999_1_600px] flex-col gap-12">
-            {{-- Arte do sistema --}}
-            <figure class="polaroide -rotate-[0.8deg]">
-                <span class="fita" style="left: 40px; margin-left: 0; width: 130px; transform: rotate(-4deg);" aria-hidden="true"></span>
-                <span class="fita fita-vermelha" style="left: auto; right: 40px; margin-left: 0; width: 110px; transform: rotate(4deg);" aria-hidden="true"></span>
-                <img src="{{ asset($sistema->capa) }}" alt="{{ $sistema->capa_alt }}"
-                     class="block h-[340px] w-full object-cover" style="object-position: {{ $sistema->capa_posicao }}">
-                <figcaption><span class="text-vermelho">{{ $sistema->nome }} · livro básico</span><span>Arte: {{ $sistema->editora }}</span></figcaption>
-            </figure>
+    {{-- Faixa do topo: trilha, título e abas --}}
+    <div class="flex flex-col gap-4 border-y border-linha bg-[#f7f2ea] px-5 pt-4 md:px-8">
+        <div class="flex flex-wrap justify-between gap-2 font-rotulo text-xs uppercase tracking-[0.12em]">
+            <nav aria-label="Trilha" class="text-tinta-3">
+                <a href="{{ route('sistemas.index') }}">Sistemas</a> / {{ $sistema->nome }}
+            </nav>
+            <span class="font-semibold text-vermelho">Capítulo: Visão geral</span>
+        </div>
 
-            {{-- Sobre --}}
-            <section class="flex flex-col gap-4">
-                <h2 class="barras text-4xl">Sobre o sistema</h2>
-                @foreach ($sistema->sobre as $paragrafo)
-                    @if ($loop->first)
-                        <p class="text-xl leading-[1.7] text-[#2c2420]"><span class="float-left mt-1 mr-3 text-[78px] leading-[0.8] font-bold text-vermelho">{{ mb_substr($paragrafo, 0, 1) }}</span>{{ mb_substr($paragrafo, 1) }}</p>
-                    @else
-                        <p class="text-lg leading-[1.7] text-tinta-2">{{ $paragrafo }}</p>
-                    @endif
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+            <span class="livro livro-pequeno" style="--cor: {{ $sistema->cor }}" aria-hidden="true">
+                <span class="livro-filete"></span>
+                <span class="livro-titulo">{{ $sistema->nome }}</span>
+                <span class="font-rotulo text-sm text-dourado-claro">{{ $sistema->sigla }}</span>
+            </span>
+
+            <div class="flex min-w-0 flex-[1_1_280px] flex-col gap-1">
+                @if ($sistema->editora)
+                    <span class="font-rotulo text-xs font-semibold uppercase tracking-[0.16em] text-[#8a6416]">{{ $sistema->editora }}</span>
+                @endif
+                <h1 class="text-4xl leading-none md:text-[52px]">{{ $sistema->nome }}</h1>
+                <span class="mt-1 self-start bg-tinta px-2.5 py-0.5 font-rotulo text-xs font-semibold uppercase tracking-[0.16em] text-dourado-claro">Visão geral</span>
+            </div>
+
+            @if (Route::has('personagens.create'))
+                <a href="{{ route('personagens.create', ['sistema' => $sistema->slug]) }}" class="btn-cheio">Criar ficha de {{ $sistema->nome }}</a>
+            @endif
+        </div>
+
+        <nav aria-label="Seções do sistema" class="flex flex-wrap gap-x-6 font-rotulo text-sm font-semibold uppercase tracking-[0.12em]">
+            <a href="{{ route('sistemas.show', $sistema) }}" aria-current="page" class="pb-2.5 pt-2 text-tinta no-underline shadow-[inset_0_-2px_0_var(--color-vermelho)]">Visão geral</a>
+            @if ($temCompendio)
+                <a href="{{ route('sistemas.compendio', $sistema) }}" class="pb-2.5 pt-2 text-tinta-3 no-underline hover:text-tinta">Compêndio</a>
+            @endif
+            @if ($temModelo)
+                <a href="{{ route('sistemas.modelo', $sistema) }}" class="pb-2.5 pt-2 text-tinta-3 no-underline hover:text-tinta">Modelo de ficha</a>
+            @endif
+        </nav>
+    </div>
+
+    <div class="mt-10 flex flex-wrap items-start gap-10">
+        {{-- Coluna principal --}}
+        <div class="flex min-w-0 flex-[999_1_560px] flex-col gap-10">
+            @if ($sistema->caminho_capa)
+                <figure class="relative mx-1 mt-1.5 -rotate-[0.6deg] bg-white px-3 pb-2.5 pt-3 shadow-[0_10px_28px_rgba(35,26,20,0.16)]">
+                    <span aria-hidden="true" class="absolute -top-2.5 left-6 h-6 w-24 -rotate-[4deg] bg-dourado/40"></span>
+                    <span aria-hidden="true" class="absolute -top-2.5 right-6 h-6 w-20 rotate-[5deg] bg-dourado/40"></span>
+                    <img src="{{ asset('storage/'.$sistema->caminho_capa) }}" alt="Capa de {{ $sistema->nome }}"
+                        @class([
+                            'block aspect-[2/1] w-full',
+                            'bg-[#f7f2ea] object-contain' => $capaVertical,
+                            'object-cover object-[center_28%]' => ! $capaVertical,
+                        ])>
+                    <figcaption class="flex flex-wrap justify-between gap-1.5 pt-2.5 font-rotulo text-[11px] uppercase tracking-[0.14em] text-tinta-3">
+                        <span class="text-tinta">{{ $sistema->nome }}</span>
+                        @if ($sistema->editora)
+                            <span>Arte: {{ $sistema->editora }}</span>
+                        @endif
+                    </figcaption>
+                </figure>
+            @endif
+
+            <section aria-labelledby="sobre-titulo" class="flex max-w-[40em] flex-col gap-3">
+                <h2 id="sobre-titulo" class="flex items-center gap-3">
+                    Sobre o sistema
+                    @include('sistemas.partials.marca')
+                </h2>
+                @foreach ($paragrafos as $paragrafo)
+                    <p @class([
+                        'text-lg leading-[1.65] text-tinta first-letter:float-left first-letter:pr-2 first-letter:pt-1 first-letter:text-[64px] first-letter:font-bold first-letter:leading-[0.8] first-letter:text-vermelho' => $loop->first,
+                        'leading-[1.65] text-tinta-2' => ! $loop->first,
+                    ])>{{ $paragrafo }}</p>
                 @endforeach
             </section>
 
-            <section class="flex flex-wrap gap-8">
-                {{-- Para jogar --}}
-                <div class="flex flex-[1_1_320px] flex-col gap-4">
-                    <h3 class="barras text-3xl">Para jogar</h3>
-                    <ul class="border-t-2 border-tinta">
-                        @foreach ($sistema->para_jogar as $item)
-                            <li class="flex items-baseline gap-3.5 border-b border-linha py-3">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="#a8191f" class="shrink-0" aria-hidden="true"><path d="M12 2l9 10-9 10-9-10z"/></svg>
-                                <span class="text-lg leading-normal">{{ $item }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                {{-- O que a RollNacional faz por ele --}}
-                <article class="flex flex-[1_1_340px] flex-col gap-4 bg-vermelho-faixa p-7 text-[#fbf3e6]">
-                    <div class="flex flex-wrap items-center justify-between gap-2.5">
-                        <h3 class="text-[26px] tracking-[0.08em]">Na RollNacional</h3>
-                        <span class="border border-dashed border-dourado-claro px-3 py-1 font-rotulo text-xs font-semibold uppercase tracking-[0.16em] text-dourado-claro">Recursos</span>
-                    </div>
-                    <ul class="flex flex-col gap-3 text-lg leading-normal text-[#f6e2d9]">
-                        @foreach ($sistema->recursos as $recurso)
-                            <li>{{ $recurso }}</li>
-                        @endforeach
-                    </ul>
-                </article>
-            </section>
+            @includeIf($pasta.'.principal')
         </div>
 
-        <aside class="flex flex-[1_1_300px] flex-col gap-6 md:sticky md:top-6 md:max-w-[380px]">
-            <div class="border border-t-4 border-linha border-t-dourado bg-marfim px-6 pt-6 pb-5">
-                <p class="sobrelinha mb-2 text-[13px] tracking-[0.24em]">Ficha técnica</p>
-                <ul>
-                    @foreach ($sistema->ficha_tecnica as $rotulo => $valor)
-                        <li class="flex items-baseline gap-3 border-b border-linha py-2.5">
-                            <span class="rotulo">{{ $rotulo }}</span>
-                            <span class="pontilhado" aria-hidden="true"></span>
-                            <span class="text-right text-[17px] font-semibold">{{ $valor }}</span>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+        {{-- Lateral --}}
+        <aside aria-label="Resumo do sistema" class="flex w-full flex-col gap-5 md:max-w-[320px] md:flex-[1_1_260px]">
+            <section aria-labelledby="ficha-tecnica" class="relative border border-linha bg-[#f7f2ea] px-5 pb-3 pt-6">
+                <span aria-hidden="true" class="absolute -top-2.5 left-1/2 h-5 w-20 -translate-x-1/2 -rotate-2 bg-dourado/45"></span>
+                <h2 id="ficha-tecnica" class="mb-1 font-rotulo text-xs font-semibold uppercase tracking-[0.16em] text-vermelho">Ficha técnica</h2>
+                <dl>
+                    @include('sistemas.partials.linha-ficha', ['rotulo' => 'Editora', 'valor' => $sistema->editora])
+                    @include('sistemas.partials.linha-ficha', ['rotulo' => 'Dado', 'valor' => $sistema->dado])
+                    @includeIf($pasta.'.lateral')
+                    @include('sistemas.partials.linha-ficha', ['rotulo' => 'Licença', 'valor' => $sistema->licenca])
+                </dl>
+            </section>
 
-            @if (Route::has('sistemas.compendio'))
-                <a href="{{ route('sistemas.compendio', $sistema->slug) }}" class="btn-sec w-full">Abrir compêndio</a>
+            @if ($temCompendio)
+                <a href="{{ route('sistemas.compendio', $sistema) }}" class="btn-contorno w-full">Abrir compêndio</a>
             @endif
 
-            <div class="bilhete rotate-[1.2deg]">
-                <span class="fita" aria-hidden="true"></span>
-                <p class="rotulo mb-1.5 text-xs text-vermelho">Suas fichas</p>
-                <p>
-                    Os personagens que você criar em {{ $sistema->nome }} aparecem em Personagens.
+            <div class="rotate-1 border border-[#efe1bc] bg-[#fff8e6] p-4 shadow-[0_6px_14px_rgba(35,26,20,0.1)]">
+                <p class="mb-1 font-rotulo text-xs font-semibold uppercase tracking-[0.14em] text-vermelho">Suas fichas aqui</p>
+                <p class="text-sm italic text-tinta-2">
+                    Seus personagens deste sistema ficam em Personagens.
                     @if (Route::has('personagens.index'))
-                        <a href="{{ route('personagens.index') }}">Ver personagens</a>
+                        <a href="{{ route('personagens.index', ['sistema' => $sistema->slug]) }}">Ver personagens</a>
                     @endif
                 </p>
             </div>

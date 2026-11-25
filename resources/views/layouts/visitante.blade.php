@@ -1,14 +1,4 @@
-{{--
-    Layout de entrar e criar conta: ilustração à esquerda, formulário à direita.
-
-    @section('titulo', 'Entrar')
-    @section('capitulo', 'Entrada')
-    @section('imagem', asset('img/site/aventureiros.webp'))
-    @section('legenda', 'A jornada continua')
-    @section('frase', 'A mesa estava esperando por você')
-    @section('conteudo') ... @endsection
---}}
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     @include('layouts.partials.head')
@@ -21,7 +11,6 @@
 
         <div class="flex flex-wrap items-center justify-between gap-4">
             @include('layouts.partials.marca')
-            <span class="sobrelinha text-xs tracking-[0.24em]">Capítulo: @yield('capitulo')</span>
         </div>
 
         <figure class="polaroide mx-auto mt-3 hidden w-full max-w-[420px] -rotate-[1.5deg] md:block">

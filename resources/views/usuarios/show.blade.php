@@ -7,7 +7,6 @@
 
 @section('titulo', $usuario->nome)
 @section('trilha', 'Usuários · '.$usuario->nome_usuario)
-@section('capitulo', 'Perfil')
 
 @section('faixa')
     <div class="flex flex-wrap items-end justify-between gap-6">

@@ -2,7 +2,6 @@
 
 @section('titulo', 'Senha')
 @section('trilha', 'Minha conta · Senha')
-@section('capitulo', 'Conta')
 
 @section('faixa')
     @include('conta.partials.faixa', ['titulo' => 'Senha'])

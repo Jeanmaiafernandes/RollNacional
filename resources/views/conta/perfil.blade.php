@@ -8,7 +8,6 @@
 @section('trilha')
     @if (Route::has('conta.dados'))<a href="{{ route('conta.dados') }}">Minha conta</a> · @endif Perfil público
 @endsection
-@section('capitulo', 'Perfil')
 
 @section('faixa')
     <div class="flex flex-wrap items-end justify-between gap-5">

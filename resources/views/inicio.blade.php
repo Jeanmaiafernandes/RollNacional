@@ -10,7 +10,6 @@
 
 @section('titulo', 'Início')
 @section('trilha', 'Início')
-@section('capitulo', 'Painel')
 
 @section('faixa')
     <div class="flex flex-wrap items-end justify-between gap-6">

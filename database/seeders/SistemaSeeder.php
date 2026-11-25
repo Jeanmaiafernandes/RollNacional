@@ -86,7 +86,7 @@ class SistemaSeeder extends Seeder
                 'editora' => 'Editora Balde Galáctico',
                 'licenca' => null,
                 'origem' => 'independente',
-                'caminho_capa' => null,
+                'caminho_capa' => 'capa-etmos.webp',
                 'publicado' => true,
             ],
         ];
